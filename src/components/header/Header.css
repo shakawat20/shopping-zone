@@ -1,0 +1,25 @@
+
+.align{
+    text-align: center;
+}
+.logo{
+    height: 50px;
+    
+}
+nav{
+    background-color: black;
+   line-height: 45px;
+    
+
+}
+nav a{
+    color:white;
+    padding: 5px;
+    margin-left: 50px;
+    text-decoration: none;
+    font-size: 25px;
+   
+}
+nav a:hover{
+    background-color: gray;
+}
