@@ -10,24 +10,25 @@ import Rating from 'react-rating';
 
 const Product = (props) => {
 
-    const element = <FontAwesomeIcon icon={faCoffee} />
+
+    const element = <i class="fa-solid fa-cart-shopping"></i>
+
 
     const { name, img, stock, price, seller, star } = props.product
     // console.log(props.product)
     // console.log(props)
 
     return (
-        <div className='product'>
-            <div>
-                <img src={img} alt="" />
-            </div>
-            <div>
+
+
+        <div className="card card-compact w-96 bg-base-100 shadow-xl m-3">
+            <figure><img src={img} alt="Loading" /></figure>
+            <div className="card-body">
                 <h2 className='product-name'>{name}</h2>
                 <p><small>by:{seller}</small></p>
                 <p>Price :{price}</p>
                 <p><small>only {stock} left in stock - order soon</small></p>
-                <button className='btn-regular' onClick={() => props.handleTocart(props.product)}>{element} add to cart</button>
-                <br />
+                
                 <Rating
 
                     initialRating={star}
@@ -36,8 +37,15 @@ const Product = (props) => {
 
 
                 ></Rating>
+                <div className="card-actions justify-end">
+                    <button className='btn' onClick={() => props.handleAddToCart(props.product)}>{element} add to cart</button>
+                </div>
             </div>
+
         </div>
+
+
+
     );
 };
 

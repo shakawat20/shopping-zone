@@ -17,7 +17,7 @@ const Cart = (props) => {
     }
 
     return (
-        <div>
+        <div style={{position:"fixed"}} >
             <h3>Order summary</h3>
             <h5>Items Ordered: {totalQuantity} </h5>
             <h5>cost : {sum.toFixed(2)}</h5>

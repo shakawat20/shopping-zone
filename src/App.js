@@ -11,6 +11,7 @@ import Register from './components/register/Register';
 import AuthProvider from './context/AuthProvider';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import Shipping from './components/shipping/Shipping';
+import Payment from './components/payment/Payment';
 
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
           </PrivateRoute>
 
            <PrivateRoute path="/shipping">
-            <Shipping></Shipping>
+            <Payment></Payment>
            </PrivateRoute>
 
           <Route path="/login">

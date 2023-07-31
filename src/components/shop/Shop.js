@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { addToDb, getStoredCart } from '../../utilities/fakedb';
+import useCart from '../../hooks/useCart';
+import { addToDb, getStoredCart } from '../../utilities/fakeDb';
 import Cart from '../cart/Cart';
 import Product from '../product/Product';
 import './Shop.css';
@@ -8,43 +9,49 @@ import './Shop.css';
 
 const Shop = () => {
     const [products, setProducts] = useState([])
-    const [cart, setCart] = useState([])
-    const [dispalyProducts, setDisplayProducts] = useState([])
-
+    const [cart, setCart] = useCart()
+    const [pageCount, setPageCount] = useState(0)
+    const [page, setPage] = useState( 0)
+    //products to be rendered on the UI
+     const [displayProducts, setDisplayProducts] = useState([])
+    const size=10;
     useEffect(() => {
 
-        fetch('https://raw.githubusercontent.com/ProgrammingHero1/ema-john-simple-resources/master/fakeData/products.JSON')
+        fetch(`http://localhost:5000/products?page=${page}&&size=${size}`)
             .then(res => res.json())
             .then(data => {
-                setProducts(data)
-                setDisplayProducts(data)
+                setProducts(data.products)
+                setDisplayProducts(data.products)
+                const count = data.count
+                const pageNumber = Math.ceil(count / size)
+                setPageCount(pageNumber)
             });
-    }, [])
+    }, [page])
 
-    useEffect(() => {
-
-
-        if (products.length) {
-            const savedCart = getStoredCart();
-            const storedCart = []
-            for (const key in savedCart) {
-
-                const addedProduct = products.find(product => product.key === key);
-
-                if (addedProduct) {
-                    const quantity = savedCart[key]
-                    addedProduct.quantity = quantity
-                    storedCart.push(addedProduct)
-                }
-            }
-            setCart(storedCart)
-        }
-        // console.log(savedCart)
+    // useEffect(() => {
 
 
-    }, [products])
+    //     if (products.length) {
+    //         const savedCart = getStoredCart();
+    //         const storedCart = []
+    //         for (const key in savedCart) {
 
-    const handleTocart = (product) => {
+    //             const addedProduct = products.find(product => product.key === key);
+
+    //             if (addedProduct) {
+    //                 const quantity = savedCart[key]
+    //                 addedProduct.quantity = quantity
+    //                 storedCart.push(addedProduct)
+    //             }
+    //         }
+    //         setCart(storedCart)
+    //     }
+    //     // console.log(savedCart)
+
+
+    // }, [products])
+
+    const handleAddToCart = (product) => {
         const exists = cart.find(pd => pd.key === product.key);
         let newCart = [];
         if (exists) {
@@ -57,12 +64,10 @@ const Shop = () => {
             newCart = [...cart, product];
 
         }
-
-
         setCart(newCart)
         addToDb(product.key)
     }
-    const handlesearch = event => {
+    const handleSearch = event => {
         const searchText = event.target.value;
         const matchedProducts = products.filter(product => product.name.toLowerCase().includes(searchText.toLowerCase()))
         setDisplayProducts(matchedProducts)
@@ -71,22 +76,34 @@ const Shop = () => {
 
     return (
         <div>
-            <div className="search-container">
+            <div className="search-container  base-300">
                 <input type="text"
                     placeholder='search product'
-                    onChange={handlesearch}
+                    onChange={handleSearch}
                 />
             </div>
             <div className="shop-container">
-                <div className='product-container'>
+                <div className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 p-4'>
                     {
-                        dispalyProducts.map(data => <Product
+                        displayProducts.map(data => <Product
                             product={data}
                             key={data.key}
-                            handleTocart={handleTocart}
+                            handleAddToCart={handleAddToCart}
 
                         ></Product>)
                     }
+                    <br />
+                    <div className="pagination">
+                        {
+                            [...Array(pageCount).keys()].map(number => <button
+
+                                className={number === page ? 'selected' : ''}
+                                key={number}
+                                onClick={() => setPage(number)}
+
+                            >{number}</button>)
+                        }
+                    </div>
 
                 </div>
                 <div className='cart-container'>
