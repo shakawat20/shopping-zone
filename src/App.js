@@ -12,9 +12,12 @@ import AuthProvider from './context/AuthProvider';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import Shipping from './components/shipping/Shipping';
 import Payment from './components/payment/Payment';
+import OrderPayment from './components/payment/OrderPayment';
 
 
 function App() {
+ 
+    
   return (
     <div>
       <AuthProvider>
@@ -27,20 +30,23 @@ function App() {
           <Route path='/shop'>
             <Shop></Shop>
           </Route>
-          <Route path='/review'>
+          <PrivateRoute path='/review'>
             <OrderReview></OrderReview>
-          </Route>
+          </PrivateRoute>
           <Route path='/inventory'>
             <Inventory></Inventory>
           </Route>
           
-          <PrivateRoute path="/placeOrder">
+          <Route path="/placeOrder">
             <PlaceOrder></PlaceOrder>
+          </Route>
+          
+          <PrivateRoute path='/payment'>
+           <OrderPayment></OrderPayment>
           </PrivateRoute>
-
-           <PrivateRoute path="/shipping">
-            <Payment></Payment>
-           </PrivateRoute>
+           {/* <PrivateRoute path="/shipping">
+            
+           </PrivateRoute> */}
 
           <Route path="/login">
             <Login></Login>

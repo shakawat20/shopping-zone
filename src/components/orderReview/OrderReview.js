@@ -4,7 +4,7 @@ import Cart from "../cart/Cart"
 import useCart from '../../hooks/useCart'
 import ReviewItem from '../reviewItem/ReviewItem';
 import { clearTheCart, deleteFromDb } from '../../utilities/fakeDb';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Payment from '../payment/Payment';
 import { set } from 'react-hook-form';
 
@@ -43,15 +43,15 @@ const OrderReview = () => {
             deleteFromDb(key)
         }
     }
-    const handlePlaceOrder = () => {
-        // setCart([]);
-        // clearTheCart();
-        history.push('/shipping')
+    // const handlePlaceOrder = () => {
+    //     // setCart([]);
+    //     // clearTheCart();
+    //     history.push('/shipping')
 
-    }
-    // function handleClick() {
-    //     history.push("/shipping")
     // }
+    // // function handleClick() {
+    // //     history.push("/shipping")
+    // // }
 
 
     console.log(cart)
@@ -71,7 +71,7 @@ const OrderReview = () => {
             <div style={{ position: "relative", top: "100px" }} >
                 <Cart cart={cart}>
 
-                    <button className='btn' onClick={handlePlaceOrder}>proceed to Order</button>
+                    <button className='btn'><Link to="/payment">proceed to Order</Link></button>
 
                 </Cart>
 

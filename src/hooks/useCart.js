@@ -5,7 +5,7 @@ const useCart = products => {
     useEffect(() => {
         const savedCart = getStoredCart()
         const keys = Object.keys(savedCart)
-        fetch('http://localhost:5000/products/byKeys', {
+        fetch('https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/products/byKeys', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'

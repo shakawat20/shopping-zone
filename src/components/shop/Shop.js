@@ -17,7 +17,7 @@ const Shop = () => {
     const size=10;
     useEffect(() => {
 
-        fetch(`http://localhost:5000/products?page=${page}&&size=${size}`)
+        fetch(`https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/products?page=${page}&&size=${size}`)
             .then(res => res.json())
             .then(data => {
                 setProducts(data.products)
@@ -109,7 +109,7 @@ const Shop = () => {
                 <div className='cart-container'>
                     <Cart cart={cart}>
                         <Link to='/review'>
-                            <button className='btn-regular'>review Item</button>
+                            <button className='btn'>review Item</button>
                         </Link>
                     </Cart>
                 </div>

@@ -1,124 +1,108 @@
-
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useEffect, useState } from 'react';
-import {
-  PaymentElement,
-  LinkAuthenticationElement,
-  useStripe,
-  useElements
-} from "@stripe/react-stripe-js";
+import useAuth from '../../hooks/useAuth';
 
-const CheckoutForm = () => {
-
-
+const CheckoutForm = ({ price }) => {
+  const { user, logOut } = useAuth();
   const stripe = useStripe();
   const elements = useElements();
-
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const [success, setSuccess] = useState();
+  const [clientSecret, setClientSecret] = useState('');
+  const [transaction, setTransaction] = useState();
 
   useEffect(() => {
-    if (!stripe) {
-      return;
+    if (price) {
+      fetch('https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: price }),
+      })
+        .then((res) => res.json())
+        .then((data) => setClientSecret(data.clientSecret));
     }
+  }, [price]);
 
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
-
-    if (!clientSecret) {
-      return;
-    }
-
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      switch (paymentIntent.status) {
-        case "succeeded":
-          setMessage("Payment succeeded!");
-          break;
-        case "processing":
-          setMessage("Your payment is processing.");
-          break;
-        case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
-          break;
-        default:
-          setMessage("Something went wrong.");
-          break;
-      }
-    });
-  }, [stripe]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
-    setIsLoading(true);
+    const card = elements.getElement(CardElement);
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
-      },
-    });
-
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message);
-    } else {
-      setMessage("An unexpected error occurred.");
+    if (card == null) {
+      return;
     }
 
-    setIsLoading(false);
+    try {
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card,
+      });
+
+      if (error) {
+        setError('An error occurred while processing your payment.');
+        return;
+      }
+
+      const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            email: user.email,
+          },
+        },
+      });
+
+      if (confirmError) {
+        setError('An error occurred while confirming your payment.');
+      } else if (paymentIntent.status === 'succeeded') {
+        setSuccess('Payment succeeded!');
+        setTransaction(paymentIntent.id);
+      }
+    } catch (error) {
+      setError('An error occurred while processing your payment.');
+    }
   };
 
-  const paymentElementOptions = {
-    layout: "tabs"
-  }
   return (
-    <div style={{ width: "1000px", height: "800px",position:"relative",top:"80px",color:"white"}}>
-      <form id="payment-form" onSubmit={handleSubmit}  >
-        <LinkAuthenticationElement
-          id="link-authentication-element"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <div >
-          <PaymentElement id="payment-element" options={{
-            style: {
-              // base: {
-              //   height:"100px",
-              //   width:"100px",
-              //   fontSize: '20px',
-              //   color: '#424770',
-              //   '::placeholder': {
-              //     color: '#aab7c4',
-              //   },
-              // },
-              invalid: {
-                color: '#9e2146'
+    
+    <div style={{width:"400px",borderRadius:"10px"}}>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <CardElement
+            options={{
+              style: {
+                base: {
+                  fontSize: '18px',
+                 
+                  '::placeholder': {
+                    color: 'black',
+                  },
+                  backgroundColor: 'white',
+                },
+                invalid: {
+                  color: '#9e2146',
+                },
               },
-            },
-          }} />
+            }}
+          />
         </div>
-
-        <button disabled={isLoading || !stripe || !elements} id="submit">
-          <span className="btn">
-            {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-          </span>
+        <div className='flex justify-center'>
+           <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
+          disabled={!stripe || !elements}
+        >
+          Pay
         </button>
-        {/* Show any error or success messages */}
-        {message && <div id="payment-message">{message}</div>}
+        </div>
+       
       </form>
+      <div className="mt-4">{transaction}</div>
+      {error && <div className="text-red-500 mt-4">{error}</div>}
     </div>
   );
 };
