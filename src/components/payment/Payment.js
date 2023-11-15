@@ -25,7 +25,7 @@ const Payment = () => {
     totalQuantity = totalQuantity + product.quantity
   }
 
-  console.log(sum)
+
 
 
 

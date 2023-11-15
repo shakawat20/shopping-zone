@@ -36,15 +36,3 @@ const useCart = products => {
 
 }
 export default useCart;
-
-
-
-
-
-
-
-
-
-
-
-

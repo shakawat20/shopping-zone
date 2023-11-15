@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 
 import logo from '../../images/logo.png';
 import './Header.css';
+import useAdmin from '../../hooks/useAdmin';
 
 
 const Header = () => {
     const { user, logOut } = useAuth()
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    const { isAdmin, adminLoading } = useAdmin(user);
+    useEffect(() => {
+
+        setTimeout(() => {
+            setIsLoaded(true);
+        }, 1000);
+
+    }, [isAdmin])
     const navigation = <>
         <li>
             <Link to="/shop">Shop</Link>
@@ -15,15 +26,18 @@ const Header = () => {
         <li>
             <Link to="/review">Order Review</Link>
         </li>
-        <li>
-            <Link to="/inventory"> Manage Inventory</Link>
-        </li>
-    
+        
+      { isAdmin && (
+                <li>
+                    <Link to="/admin"> Admin</Link>
+                </li>
+            )}
+
     </>
     return (
-        <div className="align" >
+        <div className="align" style={{position:"sticky",top:1,zIndex:99}} >
 
-            <div className="navbar bg-base-100"style={{position:"fixed", zIndex: "1"}}>
+            <div className="navbar bg-base-100" style={{ position: "sticky", zIndex: "1" }}>
                 <div className="navbar-start">
                     <div className="dropdown">
                         <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -35,7 +49,7 @@ const Header = () => {
                             }
                         </ul>
                     </div>
-                    <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+                    <a className="btn btn-ghost normal-case text-xl">shoppingZone</a>
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1">
@@ -44,15 +58,15 @@ const Header = () => {
                         }
                     </ul>
                 </div>
-                <div className="navbar-end" style={{paddingRight:"20px"}}>
-                    
-                              {
-                                user.email ?
-                                    <button onClick={logOut}>log out</button>
-                                    :
-                                    <Link to="/login"> Login</Link>
-                            }
-                    
+                <div className="navbar-end" style={{ paddingRight: "20px" }}>
+
+                    {
+                        user.email ?
+                            <button onClick={logOut}>log out</button>
+                            :
+                            <Link to="/login"> Login</Link>
+                    }
+
                 </div>
             </div>
 

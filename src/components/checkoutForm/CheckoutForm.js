@@ -13,7 +13,7 @@ const CheckoutForm = ({ price }) => {
 
   useEffect(() => {
     if (price) {
-      fetch('https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/create-payment-intent', {
+      fetch('https://shopping-zone-server.vercel.app/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: price }),
@@ -51,7 +51,7 @@ const CheckoutForm = ({ price }) => {
         payment_method: {
           card: card,
           billing_details: {
-            email: user.email,
+            email: user?.email,
           },
         },
       });
@@ -59,6 +59,11 @@ const CheckoutForm = ({ price }) => {
       if (confirmError) {
         setError('An error occurred while confirming your payment.');
       } else if (paymentIntent.status === 'succeeded') {
+        fetch("https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/order",{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({user:user,price:price}),
+        })
         setSuccess('Payment succeeded!');
         setTransaction(paymentIntent.id);
       }

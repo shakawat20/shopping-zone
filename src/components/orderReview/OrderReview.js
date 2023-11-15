@@ -3,8 +3,8 @@ import useProducts from '../../hooks/useProducts';
 import Cart from "../cart/Cart"
 import useCart from '../../hooks/useCart'
 import ReviewItem from '../reviewItem/ReviewItem';
-import { clearTheCart, deleteFromDb } from '../../utilities/fakeDb';
-import { Link, useHistory } from 'react-router-dom';
+import { clearTheCart, deleteFromDb, removeOne, updateDb } from '../../utilities/fakeDb';
+import { Link } from 'react-router-dom';
 import Payment from '../payment/Payment';
 import { set } from 'react-hook-form';
 
@@ -12,7 +12,7 @@ const OrderReview = () => {
 
     const [cart, setCart] = useCart();
     const [deleteItem, setDeleteItem] = useState(false)
-    const history = useHistory()
+   
 
     const handleDelete = (key) => {
         const newCart = cart.filter(product => product.key !== key)
@@ -20,6 +20,11 @@ const OrderReview = () => {
         setCart(newCart)
         deleteFromDb(key)
     }
+
+
+
+
+    
     const handleRemove = key => {
         const product = cart.find(product => product.key === key);
         const index = cart.findIndex(product => product.key === key);
@@ -31,9 +36,10 @@ const OrderReview = () => {
             let newCart = cart.filter(product => product.key !== key);
             console.log(newCart)
             newCart.splice(index, 0, product)
-        
-
+            
             setCart(newCart)
+            removeOne(key)
+            // updateDb(newCart)
         }
         if (product.quantity == 0) {
 
@@ -43,6 +49,8 @@ const OrderReview = () => {
             deleteFromDb(key)
         }
     }
+
+
     // const handlePlaceOrder = () => {
     //     // setCart([]);
     //     // clearTheCart();

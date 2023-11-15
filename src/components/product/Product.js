@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import './Product.css';
 import Rating from 'react-rating';
+import useAuth from '../../hooks/useAuth';
+import useAdmin from '../../hooks/useAdmin';
 
 
 
@@ -10,11 +12,14 @@ import Rating from 'react-rating';
 
 const Product = (props) => {
 
+    const { user, logOut } = useAuth()
+
+    const { isAdmin, adminLoading } = useAdmin(user);
+
 
     const element = <i class="fa-solid fa-cart-shopping"></i>
 
-
-    const { name, img, stock, price, seller, star } = props.product
+    const { name, img, stock, price, seller, star,_id } = props.product
     // console.log(props.product)
     // console.log(props)
 
@@ -22,7 +27,7 @@ const Product = (props) => {
 
 
         <div className="card card-compact w-96 bg-base-100 shadow-xl m-3">
-            <figure><img src={img} alt="Loading" /></figure>
+            <figure><img height="294" width="294"  src={img} alt="Loading" /></figure>
             <div className="card-body">
                 <h2 className='product-name'>{name}</h2>
                 <p><small>by:{seller}</small></p>
@@ -35,10 +40,12 @@ const Product = (props) => {
                     fullSymbol="fa-solid fa-star icon-color"
                     emptySymbol="fa-regular fa-star icon-color"
 
-
                 ></Rating>
                 <div className="card-actions justify-end">
-                    <button className='btn' onClick={() => props.handleAddToCart(props.product)}>{element} add to cart</button>
+                    {
+                        isAdmin ? <button className='btn' onClick={() => props.removeProduct(_id)}>Remove from inventory</button>   :<button className='btn' onClick={() => props.handleAddToCart(props.product)}>{element} add to cart</button>
+                    }
+                    
                 </div>
             </div>
 

@@ -1,26 +1,30 @@
 import React from 'react';
-import { Link, useHistory, useLocation} from 'react-router-dom';
+import { Link, useLocation, useNavigate} from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
    
 import './login.css'
 
 const Login = () => {
+    const { signInUsingGoogle, user } = useAuth();
+    console.log(user.email);
+    const location = useLocation();
+    const navigate = useNavigate(); 
+    // Use the useNavigate hook for navigation
+   
 
-    const { signInUsingGoogle,user } = useAuth();
-    console.log(user.email)
-    const location = useLocation()
-    
-    const history = useHistory()
     const redirect_uri = location.state?.from || '/shop';
-    if(user?.email){
-       return history.push(redirect_uri)
-     }
+    console.log(redirect_uri)
+
+    if (user?.email) {
+        navigate(redirect_uri); // Navigate to the intended location
+        return null; // Return null to handle navigation
+    }
 
     const handleGoogleLogin = () => {
         signInUsingGoogle()
             .then(result => { 
-                history.push(redirect_uri)
-            })
+                navigate(redirect_uri); // Navigate after successful login
+            });
     }
     return (
         <div className='login-form'>

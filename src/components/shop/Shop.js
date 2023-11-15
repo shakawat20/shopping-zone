@@ -9,12 +9,13 @@ import './Shop.css';
 
 const Shop = () => {
     const [products, setProducts] = useState([])
+    const [remove,setRemove]=useState(true)
     const [cart, setCart] = useCart()
     const [pageCount, setPageCount] = useState(0)
-    const [page, setPage] = useState( 0)
+    const [page, setPage] = useState(0)
     //products to be rendered on the UI
-     const [displayProducts, setDisplayProducts] = useState([])
-    const size=10;
+    const [displayProducts, setDisplayProducts] = useState([])
+    const size = 10;
     useEffect(() => {
 
         fetch(`https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/products?page=${page}&&size=${size}`)
@@ -25,8 +26,12 @@ const Shop = () => {
                 const count = data.count
                 const pageNumber = Math.ceil(count / size)
                 setPageCount(pageNumber)
+                setRemove(true)
+
             });
-    }, [page])
+    }, [page , remove])
+
+    console.log(displayProducts)
 
     // useEffect(() => {
 
@@ -59,6 +64,7 @@ const Shop = () => {
             exists.quantity = exists.quantity + 1;
             newCart = [...rest, product];
         }
+
         else {
             product.quantity = 1;
             newCart = [...cart, product];
@@ -73,11 +79,24 @@ const Shop = () => {
         setDisplayProducts(matchedProducts)
         console.log(matchedProducts.length)
     }
+    const removeProduct = (id) => {
+        fetch(`https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/product/${id}`,
+        {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+          
+        }
+        )
+        setRemove(false)
+   
+
+
+    }
 
     return (
         <div>
-            <div className="search-container  base-300">
-                <input type="text"
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }} className="search-container base-300 ">
+                <input type="text" className='pl-2'
                     placeholder='search product'
                     onChange={handleSearch}
                 />
@@ -89,6 +108,7 @@ const Shop = () => {
                             product={data}
                             key={data.key}
                             handleAddToCart={handleAddToCart}
+                            removeProduct={removeProduct}
 
                         ></Product>)
                     }
@@ -101,7 +121,7 @@ const Shop = () => {
                                 key={number}
                                 onClick={() => setPage(number)}
 
-                            >{number}</button>)
+                            >{number + 1}</button>)
                         }
                     </div>
 
