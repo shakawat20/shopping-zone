@@ -59,7 +59,7 @@ const CheckoutForm = ({ price }) => {
       if (confirmError) {
         setError('An error occurred while confirming your payment.');
       } else if (paymentIntent.status === 'succeeded') {
-        fetch("https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/order",{
+        fetch("https://shopping-zone-server.vercel.app/order",{
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({user:user,price:price}),

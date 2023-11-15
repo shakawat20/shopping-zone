@@ -37,7 +37,7 @@ const ManageInventory = () => {
                 }
                 
                 
-                    fetch('https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/inventory', {
+                    fetch('https://shopping-zone-server.vercel.app/inventory', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(info),

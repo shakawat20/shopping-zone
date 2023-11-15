@@ -18,7 +18,7 @@ const Shop = () => {
     const size = 10;
     useEffect(() => {
 
-        fetch(`https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/products?page=${page}&&size=${size}`)
+        fetch(`https://shopping-zone-server.vercel.app/products?page=${page}&&size=${size}`)
             .then(res => res.json())
             .then(data => {
                 setProducts(data.products)
@@ -80,7 +80,7 @@ const Shop = () => {
         console.log(matchedProducts.length)
     }
     const removeProduct = (id) => {
-        fetch(`https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/product/${id}`,
+        fetch(`https://shopping-zone-server.vercel.app/product/${id}`,
         {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },

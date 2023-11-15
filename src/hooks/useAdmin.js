@@ -10,7 +10,7 @@ const useAdmin = (user) => {
     const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
-        fetch(`https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/admin/${user?.email}`)
+        fetch(`https://shopping-zone-server.vercel.app/admin/${user?.email}`)
             .then(res => res.json())
             .then(data => {
                 setAdminLoading(false)

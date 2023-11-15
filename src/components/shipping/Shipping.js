@@ -12,7 +12,7 @@ const Shipping = () => {
     const onSubmit = data => {
         const savedCart = getStoredCart()
         data.order = savedCart;
-        fetch('https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/orders', {
+        fetch('https://shopping-zone-server.vercel.app/orders', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'

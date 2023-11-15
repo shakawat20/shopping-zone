@@ -8,7 +8,7 @@ const Orders = () => {
 
     useEffect(() => {
         if (shouldRefetch) {
-            fetch('https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/orders')
+            fetch('https://shopping-zone-server.vercel.app/orders')
                 .then(res => res.json())
                 .then(data => setOrders(data))
                 .finally(() => setShouldRefetch(false));
@@ -18,7 +18,7 @@ const Orders = () => {
 
 
     const removeFromOrder = (id) => {
-        fetch(`https://shopping-zone-server-loq2zoo8v-shakawat20.vercel.app/orders/${id}`, {
+        fetch(`https://shopping-zone-server.vercel.app/orders/${id}`, {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json'
