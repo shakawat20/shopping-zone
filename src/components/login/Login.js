@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate} from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
    
@@ -6,6 +6,8 @@ import './login.css'
 
 const Login = () => {
     const { signInUsingGoogle, user } = useAuth();
+    const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
     console.log(user.email);
     const location = useLocation();
     const navigate = useNavigate(); 
@@ -26,25 +28,72 @@ const Login = () => {
                 navigate(redirect_uri); // Navigate after successful login
             });
     }
-    return (
-        <div className='login-form'>
-            <div className='mt-32'>
-                <h2>Login</h2>
-                <form onSubmit="">
-                    <input type="email" name="" />
-                    <br />
-                    <input type="password" name="" id="" />
-                    <br />
-                    <input type="submit" value="submit" />
-                </form>
-                <p>new to ema-john? <Link to="/register">Create Account</Link></p>
 
-                <div>------or------</div>
-                <button className='btn-regular'
-                    onClick={handleGoogleLogin}
-                > google sign In</button>
-            </div>
+    const handleSubmit = (e) => {
+        e.preventDefault();
+      
+        console.log('Email:', email);
+        console.log('Password:', password);
+        
+      
+      };
+
+
+
+
+    return (
+        <div className=" flex  justify-center ">
+        <div className=" p-8 rounded shadow-md w-96 mt-24 border">
+          <h2 className="text-2xl font-semibold mb-4">Login</h2>
+          <form onSubmit={handleSubmit} className="mb-4 ">
+            <label htmlFor="email" className="block text-white-700">Email:</label>
+            <input
+              type="email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border rounded px-3 py-2 mt-1 focus:outline-none focus:ring focus:border-blue-300"
+              required
+            />
+            <br />
+            <label htmlFor="password" className="block text-white-700">Password:</label>
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border rounded px-3 py-2 mt-1 focus:outline-none focus:ring focus:border-blue-300"
+              required
+            />
+            <br />
+            <div className='flex justify-center'> <button
+              type="submit"
+              className="bg-blue-500 mt-3 border hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:border-blue-300"
+            >
+              Login
+            </button></div>
+           
+          </form>
+  
+          <div className='flex flex-col justify-center items-center'>
+            <span>or</span>
+            <br />
+            <button
+              onClick={handleGoogleLogin}
+              className="border rounded border-blue text-gray py-2 px-4"
+            >
+              Sign In With Google
+            </button>
+            <br />
+            <span>or</span>
+            <Link to='/register'>
+              <button
+                className="border rounded border-blue text-gray py-2 px-4"
+              >
+                Create Account
+              </button>
+            </Link>
+          </div>
         </div>
+      </div>
     );
 };
 
