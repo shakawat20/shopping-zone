@@ -5,9 +5,13 @@ import { addToDb, getStoredCart } from '../../utilities/fakeDb';
 import Cart from '../cart/Cart';
 import Product from '../product/Product';
 import './Shop.css';
+import useAdmin from '../../hooks/useAdmin';
+import useAuth from '../../hooks/useAuth';
 
 
 const Shop = () => {
+     const { user, logOut,auth } = useAuth()
+    const { isAdmin,admin, adminLoading } = useAdmin(user);
     const [products, setProducts] = useState([])
     const [remove,setRemove]=useState(true)
     const [cart, setCart] = useCart()
@@ -126,13 +130,17 @@ const Shop = () => {
                     </div>
 
                 </div>
-                <div className='cart-container'>
+              
+
+                <div className={ isAdmin? 'hidden':'cart-container' }>
                     <Cart cart={cart}>
                         <Link to='/review'>
                             <button className='btn'>review Item</button>
                         </Link>
                     </Cart>
                 </div>
+
+
             </div>
         </div>
     );

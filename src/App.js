@@ -16,6 +16,7 @@ import OrderPayment from './components/payment/OrderPayment';
 import Admin from './components/admin/Admin';
 import OrderList from './components/orderList/Orders';
 import Orders from './components/orderList/Orders';
+import Contact from './components/contact/Contact';
 
 function App() {
   return (
@@ -36,6 +37,8 @@ function App() {
           <Route path="/payment" element={<PrivateRoute><OrderPayment /></PrivateRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/contact" element={<Contact />} />
+
         </Routes>
 
       </AuthProvider>

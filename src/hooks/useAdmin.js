@@ -14,7 +14,7 @@ const useAdmin = (user) => {
             .then(res => res.json())
             .then(data => {
                 setAdminLoading(false)
-                console.log(data)
+           
                 setAdmin(data)
                 
                 // Move the conditional check inside useEffect

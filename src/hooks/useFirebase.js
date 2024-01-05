@@ -30,6 +30,7 @@ function useFirebase() {
         user,
         logOut,
         signInUsingGoogle,
+        auth
     };
 }
 export default useFirebase

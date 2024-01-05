@@ -1,41 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 
-import logo from '../../images/logo.png';
 import './Header.css';
 import useAdmin from '../../hooks/useAdmin';
+import Loading from './Loading';
+
 
 
 const Header = () => {
-    const { user, logOut } = useAuth()
-    const [isLoaded, setIsLoaded] = useState(false);
+    const { user, logOut, auth } = useAuth()
+    const [gUser, loading, error] = useAuthState(auth)
+    const navigate = useNavigate()
 
-    const { isAdmin, adminLoading } = useAdmin(user);
-    useEffect(() => {
+    const { isAdmin, admin, adminLoading } = useAdmin(user);
+    console.log(admin, isAdmin)
 
-        setTimeout(() => {
-            setIsLoaded(true);
-        }, 1000);
+    const LogOut = () => {
+        logOut()
+        navigate('/')
 
-    }, [isAdmin])
+    }
+
+    if (loading || adminLoading) {
+        <Loading></Loading>
+    }
     const navigation = <>
         <li>
             <Link to="/shop">Shop</Link>
         </li>
+        {
+            isAdmin ?   <li>
+            <Link to="/admin"> Admin</Link>
+        </li>:  <li><Link to="/review">Order Review</Link></li>
+        }
         <li>
-            <Link to="/review">Order Review</Link>
+            <Link to="/contact">Contact</Link>
         </li>
-        
-      { isAdmin && (
-                <li>
-                    <Link to="/admin"> Admin</Link>
-                </li>
-            )}
-
     </>
+
+
+
     return (
-        <div className="align" style={{position:"sticky",top:1,zIndex:99}} >
+        <div className="align" style={{ position: "sticky", top: 1, zIndex: 99 }} >
 
             <div className="navbar bg-base-100" style={{ position: "sticky", zIndex: "1" }}>
                 <div className="navbar-start">
@@ -62,18 +70,13 @@ const Header = () => {
 
                     {
                         user.email ?
-                            <button onClick={logOut}>log out</button>
+                            <button onClick={LogOut}>log out</button>
                             :
                             <Link to="/login"> Login</Link>
                     }
 
                 </div>
             </div>
-
-
-
-
-
 
 
         </div>
