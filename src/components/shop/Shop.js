@@ -99,8 +99,8 @@ const Shop = () => {
 
     return (
         <div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }} className="search-container base-300 ">
-                <input type="text" className='pl-2'
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center",border:"2px solid black" ,borderRadius:"3px"}} className="search-container base-300 ">
+                <input style={{border:"2px solid black",borderRadius:"4px"}} type="text" className='pl-2 '
                     placeholder='search product'
                     onChange={handleSearch}
                 />
